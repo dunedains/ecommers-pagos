@@ -1,5 +1,5 @@
 # ── Etapa 1: compilación ──────────────────────────────────────
-FROM maven:3.9-eclipse-temurin-25-alpine AS build
+FROM ecommers-base AS build
 WORKDIR /app
 COPY pom.xml .
 RUN --mount=type=cache,target=/root/.m2 mvn dependency:go-offline -B
