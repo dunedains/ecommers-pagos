@@ -83,6 +83,7 @@ CREATE TABLE payments (
 | Servicio | Uso | Puerto |
 |---------|-----|--------|
 | **orders** | Valida estado de la orden y actualiza a CONFIRMED/CANCELLED | `8087` |
+| **notifications** | Envía notificaciones al completar, fallar o reembolsar pagos | `8089` |
 
 > **Nota técnica:** usa Apache HttpClient 5 (`feign-hc5`) para que Feign pueda enviar peticiones PATCH, ya que `HttpURLConnection` de Java no soporta ese método HTTP.
 
@@ -94,6 +95,7 @@ CREATE TABLE payments (
 | `SPRING_DATASOURCE_USERNAME` | Usuario de la base de datos |
 | `SPRING_DATASOURCE_PASSWORD` | Contraseña de la base de datos |
 | `FEIGN_CLIENT_ORDER_URL` | URL del servicio de órdenes |
+| `FEIGN_CLIENT_NOTIFICATION_URL` | URL del servicio de notificaciones |
 
 ## Tecnologías
 
