@@ -8,3 +8,5 @@ target/
 .vscode/
 .claude/
 .DS_Store
+.fuse_hidden*
+HELP.md
