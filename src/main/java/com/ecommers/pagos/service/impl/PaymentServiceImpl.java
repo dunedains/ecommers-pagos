@@ -36,6 +36,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public PaymentResponse processPayment(PaymentRequest request) {
+        log.info("Procesando pago orderId={}, userId={}, amount={}, method={}", request.orderId(), request.userId(), request.amount(), request.method());
         // Valida que la orden exista y no esté cancelada
         OrderDto order = orderClient.getOrderById(request.orderId());
         if (ORDER_CANCELLED.equals(order.status())) {
@@ -62,6 +63,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             saved.setStatus(STATUS_COMPLETED);
             repository.save(saved);
+            log.info("Pago id={} completado para orden={}", saved.getId(), request.orderId());
             orderClient.updateOrderStatus(request.orderId(), ORDER_CONFIRMED);
             notify(request.userId(), "PAYMENT_COMPLETED",
                     "Tu pago de $" + request.amount() + " para la orden #" + request.orderId() + " fue procesado exitosamente");
@@ -79,12 +81,14 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(readOnly = true)
     public PaymentResponse getPaymentById(Long id) {
+        log.info("Buscando pago id={}", id);
         return toResponse(findOrThrow(id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public PaymentResponse getPaymentByOrder(Long orderId) {
+        log.info("Buscando pago por orderId={}", orderId);
         Payment payment = repository.findByOrderId(orderId)
                 .orElseThrow(() -> new PaymentNotFoundException("No existe pago para la orden: " + orderId));
         return toResponse(payment);
@@ -93,6 +97,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional(readOnly = true)
     public List<PaymentResponse> getPaymentsByUser(Long userId) {
+        log.info("Listando pagos del usuario userId={}", userId);
         return repository.findByUserId(userId).stream()
                 .map(this::toResponse)
                 .toList();
@@ -101,6 +106,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public PaymentResponse refundPayment(Long id) {
+        log.info("Procesando reembolso pago id={}", id);
         Payment payment = findOrThrow(id);
 
         if (!STATUS_COMPLETED.equals(payment.getStatus())) {
@@ -108,6 +114,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         payment.setStatus(STATUS_REFUNDED);
+        log.info("Reembolso completado pago id={}, orderId={}", id, payment.getOrderId());
         orderClient.updateOrderStatus(payment.getOrderId(), ORDER_CANCELLED);
         notify(payment.getUserId(), "PAYMENT_REFUNDED",
                 "Se realizó el reembolso de $" + payment.getAmount() + " de la orden #" + payment.getOrderId());
