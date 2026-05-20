@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-  <!-- Consola -->
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
       <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
     </encoder>
   </appender>
 
-  <!-- Archivo con rotación diaria y retención 7 días -->
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>/logs/pagos/pagos.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>/logs/pagos/pagos.%d{{yyyy-MM-dd}}.log</fileNamePattern>
+      <fileNamePattern>/logs/pagos/pagos.%d{yyyy-MM-dd}.log</fileNamePattern>
       <maxHistory>7</maxHistory>
       <cleanHistoryOnStart>true</cleanHistoryOnStart>
     </rollingPolicy>
