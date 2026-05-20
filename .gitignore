@@ -1,0 +1,10 @@
+target/
+.fuse_hidden*
+*.class
+*.jar
+*.war
+.idea/
+*.iml
+.vscode/
+.claude/
+.DS_Store
