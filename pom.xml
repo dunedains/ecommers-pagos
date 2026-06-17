@@ -31,6 +31,22 @@
 		<spring-cloud.version>2025.1.1</spring-cloud.version>
 	</properties>
 	<dependencies>
+		<!-- Testcontainers: tests de integracion contra un PostgreSQL real -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<!-- Trazas distribuidas (Micrometer Tracing -> Tempo via Zipkin) -->
 		<dependency>
 			<groupId>io.micrometer</groupId>
