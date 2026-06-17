@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </encoder>
-  </appender>
+    <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="app"/>
 
-  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>/logs/pagos/pagos.log</file>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>/logs/pagos/pagos.%d{yyyy-MM-dd}.log</fileNamePattern>
-      <maxHistory>7</maxHistory>
-      <cleanHistoryOnStart>true</cleanHistoryOnStart>
-    </rollingPolicy>
-    <encoder>
-      <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
-    </encoder>
-  </appender>
+    <!-- Salida JSON estructurada a consola (la captura Docker) -->
+    <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"service":"${appName}"}</customFields>
+            <includeMdcKeyName>traceId</includeMdcKeyName>
+            <fieldNames>
+                <timestamp>@timestamp</timestamp>
+                <version>[ignore]</version>
+                <levelValue>[ignore]</levelValue>
+            </fieldNames>
+        </encoder>
+    </appender>
 
-  <root level="INFO">
-    <appender-ref ref="CONSOLE"/>
-    <appender-ref ref="FILE"/>
-  </root>
+    <root level="INFO">
+        <appender-ref ref="JSON"/>
+    </root>
+
+    <logger name="com.ecommers" level="DEBUG"/>
 
 </configuration>
